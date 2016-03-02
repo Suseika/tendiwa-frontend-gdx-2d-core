@@ -12,13 +12,29 @@ class ClasspathImageExtractorKtTest : HeadlessGdxTest() {
             listOf("floors"),
             outputDirectory
         )
-        try {
-            assert(
-                outputDirectory.toFile().listFiles()
-                    .all { it.name.contains("png") }
-            )
-        } finally {
-            outputDirectory.toFile().delete()
-        }
+        assert(
+            outputDirectory.toFile().listFiles()
+                .all { it.name.contains("png") }
+        )
+    }
+
+    @Test
+    fun `builds atlas`() {
+        val resourcesDir = Files.createTempDirectory("resources")
+        application.extractImagesFromClasspath(
+            listOf("floors"),
+            resourcesDir
+        )
+        val atlasDir = Files.createTempDirectory("atlas")
+        application.buildTextureAtlas(
+            resourcesDir,
+            atlasDir,
+            "atlas"
+        )
+        assert(
+            atlasDir.toFile().listFiles().all {
+                it.name.contains("atlas")
+            }
+        )
     }
 }

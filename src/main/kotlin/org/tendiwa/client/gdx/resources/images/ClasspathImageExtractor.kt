@@ -3,6 +3,7 @@ package org.tendiwa.client.gdx.resources.images
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
+import com.badlogic.gdx.tools.texturepacker.TexturePacker
 import org.reflections.Reflections
 import org.reflections.scanners.ResourcesScanner
 import java.io.File
@@ -16,7 +17,6 @@ fun Application.extractImagesFromClasspath(
     classpathPackages: List<String>,
     outputDirectory: Path
 ) {
-    Runtime.getRuntime().exec("mkdir $outputDirectory")
     classpathPackages.forEach {
         Reflections(it, ResourcesScanner())
             .getResources(Pattern.compile(".*\\.png"))
@@ -35,5 +35,21 @@ fun Application.extractImagesFromClasspath(
                 )
             }
     }
+}
+
+/**
+ * Combines all images in a directory into a texture atlas.
+ * @param packFileName See [TexturePacker.process].
+ */
+fun Application.buildTextureAtlas(
+    inputDirectory: Path,
+    outputDirectory: Path,
+    packFileName: String
+) {
+    TexturePacker.process(
+        inputDirectory.toString(),
+        outputDirectory.toString(),
+        packFileName
+    )
 }
 
