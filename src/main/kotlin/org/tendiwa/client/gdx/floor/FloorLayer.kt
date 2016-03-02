@@ -1,40 +1,24 @@
 package org.tendiwa.client.gdx.floor
 
-import com.badlogic.gdx.graphics.Camera
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType.Filled
-import org.tendiwa.plane.grid.masks.BoundedGridMask
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Batch
+import org.tendiwa.client.gdx.Viewport
 
 class FloorLayer(
-    val tiles: BoundedGridMask
+    val viewport: Viewport,
+    val textureAt: (Int, Int) -> Texture
 ) {
-
-    val renderer = ShapeRenderer()
-
-    fun draw(camera: Camera) {
-        renderer.projectionMatrix = camera.combined
-        renderer.begin(Filled)
-        tiles.hull.forEachTile {
+    fun draw(batch: Batch) {
+        viewport.tileBounds.forEachTile {
             x, y ->
-            drawTile(x, y, tiles.contains(x, y))
+            batch.draw(
+                textureAt(x, y),
+                x.toFloat(),
+                y.toFloat(),
+                1f,
+                1f
+            )
         }
-        renderer.end()
-    }
-
-    fun drawTile(x: Int, y: Int, value: Boolean) {
-        val color =
-            if (value) Color.GREEN else Color.BLACK
-        renderer.rect(
-            x * 1.0f,
-            y * 1.0f,
-            1.0f,
-            1.0f,
-            color,
-            color,
-            color,
-            color
-        )
     }
 }
 
