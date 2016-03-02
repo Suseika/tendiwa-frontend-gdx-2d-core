@@ -40,5 +40,10 @@
             <artifactId>gdx</artifactId>
             <version>${gdx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.tendiwa</groupId>
+            <artifactId>plane-grid</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
