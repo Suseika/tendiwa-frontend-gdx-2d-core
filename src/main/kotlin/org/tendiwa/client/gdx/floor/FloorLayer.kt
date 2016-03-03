@@ -1,12 +1,12 @@
 package org.tendiwa.client.gdx.floor
 
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import org.tendiwa.client.gdx.Viewport
 
 class FloorLayer(
     val viewport: Viewport,
-    val textureAt: (Int, Int) -> Texture
+    val textureAt: (Int, Int) -> TextureRegion
 ) {
     fun draw(batch: Batch) {
         viewport.tileBounds.forEachTile {

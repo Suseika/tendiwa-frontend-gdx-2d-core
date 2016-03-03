@@ -2,23 +2,23 @@ package org.tendiwa.client.gdx
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import org.tendiwa.client.gdx.floor.FloorLayer
+import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.plane.grid.masks.StringGridMask
 
 class TendiwaGame(
+    private val atlasPath: String
 ) : ApplicationAdapter() {
     lateinit var layer: FloorLayer
     lateinit var camera: Camera
     lateinit var batch: Batch
-    lateinit var assetManager: AssetManager
+    lateinit var textureCache: NamedTextureCache
 
     override fun create() {
         camera =
@@ -34,19 +34,6 @@ class TendiwaGame(
                     )
                     zoom = 1.0f
                     update()
-                }
-        val texturePath1 =
-            "/home/suseika/Projects/tendiwa/game/frontend/gdx-2d/frontend-gdx-2d-core/src/test/resources/floors/grass_1.png"
-        val texturePath2 =
-            "/home/suseika/Projects/tendiwa/game/frontend/gdx-2d/frontend-gdx-2d-core/src/test/resources/floors/stone_1.png"
-        assetManager =
-            AssetManager(
-                AbsoluteFileHandleResolver()
-            )
-                .apply {
-                    load(texturePath1, Texture::class.java)
-                    load(texturePath2, Texture::class.java)
-                    finishLoading()
                 }
         batch =
             SpriteBatch()
@@ -67,13 +54,19 @@ class TendiwaGame(
             "...#...............",
             "...##.............."
         )
+        textureCache =
+            NamedTextureCache(
+                TextureAtlas(
+                    Gdx.files.classpath(atlasPath)
+                )
+            )
         layer =
             FloorLayer(
                 Viewport(mask.hull),
                 { x, y ->
-                    assetManager.get(
-                        if (mask.contains(x, y)) texturePath1 else texturePath2,
-                        Texture::class.java
+                    textureCache.texture(
+                        name = if (mask.contains(x, y)) "grass" else "stone",
+                        index = 0
                     )
                 }
             )
