@@ -2,7 +2,6 @@ package org.tendiwa.client.gdx
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -17,7 +16,7 @@ class TendiwaGame(
     private val atlasPath: String
 ) : ApplicationAdapter() {
     lateinit var layer: FloorLayer
-    lateinit var camera: Camera
+    lateinit var camera: OrthographicCamera
     lateinit var batch: Batch
     lateinit var textureCache: NamedTextureCache
     val vicinity: RenderingVicinity
@@ -70,6 +69,7 @@ class TendiwaGame(
                 )
             )
         layer = FloorLayer(textureCache, vicinity)
+        Gdx.input.inputProcessor = CameraInputAdapter(camera)
     }
 
     override fun render() {
