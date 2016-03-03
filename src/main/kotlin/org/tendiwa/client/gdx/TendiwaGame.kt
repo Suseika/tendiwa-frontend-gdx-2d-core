@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.plane.grid.masks.StringGridMask
+import org.tendiwa.world.floors.FloorType
 
 class TendiwaGame(
     private val atlasPath: String
@@ -19,6 +20,31 @@ class TendiwaGame(
     lateinit var camera: Camera
     lateinit var batch: Batch
     lateinit var textureCache: NamedTextureCache
+    val vicinity: RenderingVicinity
+        get() = object : RenderingVicinity {
+            val mask = StringGridMask(
+                "...................",
+                "................#..",
+                "...............##..",
+                "..###...........#..",
+                "..###..........##..",
+                "..###...........#..",
+                "....#....#.........",
+                "........##.........",
+                "...................",
+                "...................",
+                "......#............",
+                "....#.......#####..",
+                "...#...............",
+                "...#...............",
+                "...##.............."
+            )
+            override val viewport = Viewport(mask.hull)
+            private val grass = FloorType("grass", false)
+            private val stone = FloorType("stone", false)
+            override fun floorAt(x: Int, y: Int): FloorType =
+                if (mask.contains(x, y)) grass else stone
+        }
 
     override fun create() {
         camera =
@@ -37,39 +63,13 @@ class TendiwaGame(
                 }
         batch =
             SpriteBatch()
-        val mask = StringGridMask(
-            "...................",
-            "................#..",
-            "...............##..",
-            "..###...........#..",
-            "..###..........##..",
-            "..###...........#..",
-            "....#....#.........",
-            "........##.........",
-            "...................",
-            "...................",
-            "......#............",
-            "....#.......#####..",
-            "...#...............",
-            "...#...............",
-            "...##.............."
-        )
         textureCache =
             NamedTextureCache(
                 TextureAtlas(
                     Gdx.files.classpath(atlasPath)
                 )
             )
-        layer =
-            FloorLayer(
-                Viewport(mask.hull),
-                { x, y ->
-                    textureCache.texture(
-                        name = if (mask.contains(x, y)) "grass" else "stone",
-                        index = 0
-                    )
-                }
-            )
+        layer = FloorLayer(textureCache, vicinity)
     }
 
     override fun render() {
