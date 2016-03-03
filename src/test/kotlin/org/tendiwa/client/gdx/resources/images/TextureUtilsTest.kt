@@ -4,11 +4,11 @@ import org.junit.Test
 import org.tendiwa.client.gdx.testing.HeadlessGdxTest
 import java.nio.file.Files
 
-class ClasspathImageExtractorKtTest : HeadlessGdxTest() {
+class TextureUtilsTest : HeadlessGdxTest() {
     @Test
     fun `extracts resources from classpath do a directory`() {
         val outputDirectory = Files.createTempDirectory("extracted")
-        application.extractImagesFromClasspath(
+        TextureUtils.extractImagesFromClasspath(
             listOf("floors"),
             outputDirectory
         )
@@ -21,12 +21,12 @@ class ClasspathImageExtractorKtTest : HeadlessGdxTest() {
     @Test
     fun `builds atlas`() {
         val resourcesDir = Files.createTempDirectory("resources")
-        application.extractImagesFromClasspath(
+        TextureUtils.extractImagesFromClasspath(
             listOf("floors"),
             resourcesDir
         )
         val atlasDir = Files.createTempDirectory("atlas")
-        application.buildTextureAtlas(
+        TextureUtils.buildTextureAtlas(
             resourcesDir,
             atlasDir,
             "atlas"
