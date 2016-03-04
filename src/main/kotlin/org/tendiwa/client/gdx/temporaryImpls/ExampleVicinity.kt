@@ -44,7 +44,7 @@ class ExampleVicinity : RenderingVicinity {
     private val grassFloor = FloorType("grass", false)
     private val stoneFloor = FloorType("stone", false)
     private val stoneWall = WallType("wall_gray_stone")
-    private val voidWall = WallType("lattice")
+    private val voidWall = WallType.void
 
     override fun floorAt(x: Int, y: Int): FloorType =
         if (floorMask.contains(x, y)) grassFloor else stoneFloor

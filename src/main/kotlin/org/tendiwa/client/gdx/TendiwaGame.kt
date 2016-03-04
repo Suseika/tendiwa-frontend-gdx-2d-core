@@ -30,28 +30,29 @@ class TendiwaGame(
             )
         val camera = TendiwaCamera()
         val wallActorFactory =
-        WallActorFactory(
-            TextureAtlas(Gdx.files.classpath("walls/walls.atlas")),
-            vicinity
-        )
+            WallActorFactory(
+                NamedTextureCache(
+                    TextureAtlas(Gdx.files.classpath("walls/walls.atlas"))
+                ),
+                vicinity
+            )
         stage = Stage(
             FitViewport(
-                Gdx.graphics.width.toFloat()/32,
-                Gdx.graphics.height.toFloat()/32,
+                Gdx.graphics.width.toFloat() / 32,
+                Gdx.graphics.height.toFloat() / 32,
                 camera
             ),
             SpriteBatch()
         )
-        .apply {
-            addActor(
-                FloorLayer(textureCache, vicinity)
-            )
-            vicinity.tileBounds.forEachTile { x, y ->
+            .apply {
                 addActor(
-                    wallActorFactory.createActor(x, y)
+                    FloorLayer(textureCache, vicinity)
                 )
+                vicinity.tileBounds.forEachTile { x, y ->
+                    wallActorFactory.createActor(x, y)
+                        ?.let { addActor(it) }
+                }
             }
-        }
         Gdx.input.inputProcessor = createInputProcessor(camera)
     }
 
