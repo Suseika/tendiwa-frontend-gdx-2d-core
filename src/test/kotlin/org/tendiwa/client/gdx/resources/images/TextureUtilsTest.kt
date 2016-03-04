@@ -7,7 +7,7 @@ import java.nio.file.Files
 class TextureUtilsTest : HeadlessGdxTest() {
     @Test
     fun `extracts resources from classpath do a directory`() {
-        val outputDirectory = Files.createTempDirectory("extracted")
+        val outputDirectory = Files.createTempDirectory("walls")
         TextureUtils.extractImagesFromClasspath(
             listOf("floors"),
             outputDirectory

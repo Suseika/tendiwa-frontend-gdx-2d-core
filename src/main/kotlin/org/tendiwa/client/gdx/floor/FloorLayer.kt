@@ -2,14 +2,15 @@ package org.tendiwa.client.gdx.floor
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.scenes.scene2d.Actor
 import org.tendiwa.client.gdx.RenderingVicinity
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 
 class FloorLayer(
     val textureCache: NamedTextureCache,
     val vicinity: RenderingVicinity
-) {
-    fun draw(batch: Batch) {
+) : Actor() {
+    override fun draw(batch: Batch, parentAlpha: Float) {
         vicinity.tileBounds.forEachTile {
             x, y ->
             batch.draw(
