@@ -1,8 +1,9 @@
-package org.tendiwa.client.gdx
+package org.tendiwa.client.gdx.temporaryImpls
 
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.graphics.OrthographicCamera
+import org.tendiwa.client.gdx.RenderingVicinity
 import org.tendiwa.plane.grid.rectangles.GridRectangle
 
 class CameraInputAdapter(

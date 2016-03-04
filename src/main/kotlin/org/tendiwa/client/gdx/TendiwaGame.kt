@@ -2,6 +2,7 @@ package org.tendiwa.client.gdx
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -9,56 +10,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
-import org.tendiwa.plane.grid.masks.StringGridMask
-import org.tendiwa.world.floors.FloorType
 
 class TendiwaGame(
-    private val atlasPath: String
+    private val atlasPath: String,
+    private val createInputProcessor: (OrthographicCamera) -> InputProcessor,
+    private val vicinity: RenderingVicinity
 ) : ApplicationAdapter() {
     lateinit var layer: FloorLayer
-    lateinit var camera: OrthographicCamera
     lateinit var batch: Batch
+    lateinit var camera: OrthographicCamera
     lateinit var textureCache: NamedTextureCache
-    val vicinity: RenderingVicinity = object : RenderingVicinity {
-            val mask = StringGridMask(
-                "...................",
-                "................#..",
-                "...............##..",
-                "..###...........#..",
-                "..###..........##..",
-                "..###...........#..",
-                "....#....#.........",
-                "........##.........",
-                "...................",
-                "...................",
-                "......#............",
-                "....#.......#####..",
-                "...#...............",
-                "...#...............",
-                "...##.............."
-            )
-            override var tileBounds = mask.hull
-            private val grass = FloorType("grass", false)
-            private val stone = FloorType("stone", false)
-            override fun floorAt(x: Int, y: Int): FloorType =
-                if (mask.contains(x, y)) grass else stone
-        }
 
     override fun create() {
-        camera =
-            OrthographicCamera(
-                Gdx.graphics.width.toFloat() / 32,
-                Gdx.graphics.height.toFloat() / 32
-            )
-                .apply {
-                    position.set(
-                        viewportWidth / 2f,
-                        viewportHeight / 2f,
-                        0.0f
-                    )
-                    zoom = 1.0f
-                    update()
-                }
+        camera = TendiwaCamera()
         batch =
             SpriteBatch()
         textureCache =
@@ -68,7 +32,7 @@ class TendiwaGame(
                 )
             )
         layer = FloorLayer(textureCache, vicinity)
-        Gdx.input.inputProcessor = CameraInputAdapter(camera, vicinity)
+        Gdx.input.inputProcessor = createInputProcessor(camera)
     }
 
     override fun render() {
