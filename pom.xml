@@ -15,7 +15,7 @@
     <description>Core of a 2D game client for Tendiwa with OpenGL rendering</description>
 
     <properties>
-        <gdx.version>1.0-SNAPSHOT</gdx.version>
+        <gdx.version>1.9.2</gdx.version>
     </properties>
     <repositories>
         <repository>
@@ -58,6 +58,11 @@
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx-backend-headless</artifactId>
+            <version>${gdx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx-freetype</artifactId>
             <version>${gdx.version}</version>
         </dependency>
         <dependency>
