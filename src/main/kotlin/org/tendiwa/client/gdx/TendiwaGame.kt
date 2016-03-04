@@ -19,8 +19,7 @@ class TendiwaGame(
     lateinit var camera: OrthographicCamera
     lateinit var batch: Batch
     lateinit var textureCache: NamedTextureCache
-    val vicinity: RenderingVicinity
-        get() = object : RenderingVicinity {
+    val vicinity: RenderingVicinity = object : RenderingVicinity {
             val mask = StringGridMask(
                 "...................",
                 "................#..",
@@ -38,7 +37,7 @@ class TendiwaGame(
                 "...#...............",
                 "...##.............."
             )
-            override val viewport = Viewport(mask.hull)
+            override var tileBounds = mask.hull
             private val grass = FloorType("grass", false)
             private val stone = FloorType("stone", false)
             override fun floorAt(x: Int, y: Int): FloorType =
@@ -69,7 +68,7 @@ class TendiwaGame(
                 )
             )
         layer = FloorLayer(textureCache, vicinity)
-        Gdx.input.inputProcessor = CameraInputAdapter(camera)
+        Gdx.input.inputProcessor = CameraInputAdapter(camera, vicinity)
     }
 
     override fun render() {

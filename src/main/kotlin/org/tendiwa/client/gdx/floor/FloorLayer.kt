@@ -10,7 +10,7 @@ class FloorLayer(
     val vicinity: RenderingVicinity
 ) {
     fun draw(batch: Batch) {
-        vicinity.viewport.tileBounds.forEachTile {
+        vicinity.tileBounds.forEachTile {
             x, y ->
             batch.draw(
                 textureAt(x, y),
