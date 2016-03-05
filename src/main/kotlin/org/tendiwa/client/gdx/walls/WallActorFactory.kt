@@ -3,7 +3,7 @@ package org.tendiwa.client.gdx.walls
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import org.tendiwa.client.gdx.RenderingVicinity
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
-import org.tendiwa.world.WallType
+import org.tendiwa.world.walls.WallType
 
 class WallActorFactory(
     private val textureCache: NamedTextureCache,

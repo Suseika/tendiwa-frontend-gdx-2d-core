@@ -2,7 +2,7 @@ package org.tendiwa.client.gdx.temporaryImpls
 
 import org.tendiwa.client.gdx.RenderingVicinity
 import org.tendiwa.plane.grid.masks.StringGridMask
-import org.tendiwa.world.WallType
+import org.tendiwa.world.walls.WallType
 import org.tendiwa.world.floors.FloorType
 
 class ExampleVicinity : RenderingVicinity {

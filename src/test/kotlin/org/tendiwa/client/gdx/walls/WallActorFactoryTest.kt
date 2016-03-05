@@ -9,7 +9,7 @@ import org.tendiwa.client.gdx.RenderingVicinity
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.client.gdx.testing.LwjglGdxRule
 import org.tendiwa.plane.grid.rectangles.GridRectangle
-import org.tendiwa.world.WallType
+import org.tendiwa.world.walls.WallType
 import org.tendiwa.world.floors.FloorType
 import kotlin.test.assertNotNull
 
