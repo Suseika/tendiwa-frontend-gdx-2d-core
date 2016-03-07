@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import org.tendiwa.backend.space.Reality
+import org.tendiwa.backend.space.walls.WallType
 import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.client.gdx.temporaryImpls.TendiwaInputAdapter
@@ -61,8 +62,10 @@ class TendiwaGame(
                     FloorLayer(textureCache, vicinity)
                 )
                 vicinity.tileBounds.forEachTile { x, y ->
-                    wallActorFactory.createActor(x, y)
-                        ?.let { addActor(it) }
+                    if (vicinity.wallAt(x, y) != WallType.void) {
+                        wallActorFactory.createActor(x, y)
+                            .let { addActor(it) }
+                    }
                 }
             }
         val inputAdapter = TendiwaInputAdapter()

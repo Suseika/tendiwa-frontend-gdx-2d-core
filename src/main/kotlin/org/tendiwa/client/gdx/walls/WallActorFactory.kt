@@ -9,14 +9,14 @@ class WallActorFactory(
     private val textureCache: NamedTextureCache,
     private val vicinity: RenderingVicinity
 ) {
-    fun createActor(x: Int, y: Int): WallActor? =
+    fun createActor(x: Int, y: Int): WallActor =
         regionForWall(x, y)
-            ?.let { WallActor(it, x, y) }
+            .let { WallActor(it, x, y) }
 
-    private fun regionForWall(x: Int, y: Int): TextureRegion? {
+    private fun regionForWall(x: Int, y: Int): TextureRegion {
         val wallType = vicinity.wallAt(x, y)
         return if (wallType == WallType.void) {
-            null
+            throw IllegalArgumentException("No wall at $x:$y")
         } else {
             textureCache.texture(
                 wallType.name,
