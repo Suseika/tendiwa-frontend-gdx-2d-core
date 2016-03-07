@@ -11,8 +11,9 @@ import org.tendiwa.backend.space.Reality
 import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.client.gdx.temporaryImpls.CameraInputAdapter
-import org.tendiwa.client.gdx.temporaryImpls.ExampleVicinity
 import org.tendiwa.client.gdx.walls.WallActorFactory
+import org.tendiwa.frontend.generic.RenderingVicinity
+import org.tendiwa.plane.grid.dimensions.GridDimension
 
 class TendiwaGame(
     private val atlasPath: String,
@@ -23,8 +24,13 @@ class TendiwaGame(
     lateinit var vicinity: RenderingVicinity
 
     override fun create() {
-        vicinity =
-            ExampleVicinity(reality.space)
+        vicinity = RenderingVicinity(
+            reality.space,
+            GridDimension(
+                Gdx.graphics.width / 32,
+                Gdx.graphics.height / 32
+            )
+        )
         textureCache =
             NamedTextureCache(
                 TextureAtlas(
