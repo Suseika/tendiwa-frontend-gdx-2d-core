@@ -1,54 +1,23 @@
 package org.tendiwa.client.gdx.temporaryImpls
 
-import org.tendiwa.client.gdx.RenderingVicinity
-import org.tendiwa.plane.grid.masks.StringGridMask
-import org.tendiwa.backend.space.walls.WallType
+import com.badlogic.gdx.Gdx
+import org.tendiwa.backend.space.Space
 import org.tendiwa.backend.space.floors.FloorType
+import org.tendiwa.backend.space.floors.floors
+import org.tendiwa.backend.space.walls.WallType
+import org.tendiwa.backend.space.walls.walls
+import org.tendiwa.client.gdx.RenderingVicinity
+import org.tendiwa.plane.grid.constructors.GridRectangle
+import org.tendiwa.plane.grid.dimensions.by
 
-class ExampleVicinity : RenderingVicinity {
-    val floorMask = StringGridMask(
-        "...................",
-        "................#..",
-        "...............##..",
-        "..###...........#..",
-        "..###..........##..",
-        "..###...........#..",
-        "....#....#.........",
-        "........##.........",
-        "...................",
-        "...................",
-        "......#............",
-        "....#.......#####..",
-        "...#...............",
-        "...#...............",
-        "...##.............."
+class ExampleVicinity(private val space: Space) : RenderingVicinity {
+    override var tileBounds = GridRectangle(
+        Gdx.graphics.width / 32 by Gdx.graphics.height / 32
     )
-    val wallMask = StringGridMask(
-        "...................",
-        "...................",
-        "...................",
-        "...................",
-        "...................",
-        "....############...",
-        "....#..........#...",
-        "....#..........#...",
-        "....#..........#...",
-        "....#....#.....#...",
-        "....#..........#...",
-        "....#..........#...",
-        "....############...",
-        "...................",
-        "..................."
-    )
-    override var tileBounds = floorMask.hull
-    private val grassFloor = FloorType("grass", false)
-    private val stoneFloor = FloorType("stone", false)
-    private val stoneWall = WallType("wall_gray_stone")
-    private val voidWall = WallType.void
 
     override fun floorAt(x: Int, y: Int): FloorType =
-        if (floorMask.contains(x, y)) grassFloor else stoneFloor
+        space.floors.chunkWithTile(x, y).floorAt(x, y)
 
     override fun wallAt(x: Int, y: Int): WallType =
-        if (wallMask.contains(x, y)) stoneWall else voidWall
+        space.walls.chunkWithTile(x, y).wallAt(x, y)
 }

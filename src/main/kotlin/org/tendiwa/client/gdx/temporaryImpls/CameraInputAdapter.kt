@@ -32,7 +32,6 @@ class CameraInputAdapter(
                     it.height
                 )
             }
-            println(vicinity.tileBounds)
             return true
         }
         return false

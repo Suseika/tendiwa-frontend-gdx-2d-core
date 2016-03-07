@@ -2,26 +2,29 @@ package org.tendiwa.client.gdx
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
+import org.tendiwa.backend.space.Reality
 import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
+import org.tendiwa.client.gdx.temporaryImpls.CameraInputAdapter
+import org.tendiwa.client.gdx.temporaryImpls.ExampleVicinity
 import org.tendiwa.client.gdx.walls.WallActorFactory
 
 class TendiwaGame(
     private val atlasPath: String,
-    private val createInputProcessor: (OrthographicCamera) -> InputProcessor,
-    private val vicinity: RenderingVicinity
+    private val reality: Reality
 ) : ApplicationAdapter() {
     lateinit var textureCache: NamedTextureCache
     lateinit var stage: Stage
+    lateinit var vicinity: RenderingVicinity
 
     override fun create() {
+        vicinity =
+            ExampleVicinity(reality.space)
         textureCache =
             NamedTextureCache(
                 TextureAtlas(
@@ -53,7 +56,7 @@ class TendiwaGame(
                         ?.let { addActor(it) }
                 }
             }
-        Gdx.input.inputProcessor = createInputProcessor(camera)
+        Gdx.input.inputProcessor = CameraInputAdapter(camera, vicinity)
     }
 
     override fun render() {

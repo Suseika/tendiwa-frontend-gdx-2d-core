@@ -1,9 +1,9 @@
 package org.tendiwa.client.gdx.walls
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import org.tendiwa.backend.space.walls.WallType
 import org.tendiwa.client.gdx.RenderingVicinity
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
-import org.tendiwa.backend.space.walls.WallType
 
 class WallActorFactory(
     private val textureCache: NamedTextureCache,
@@ -47,5 +47,8 @@ class WallActorFactory(
      * Returns 1 if there is a wall, or 0 if there isn't.
      */
     private fun RenderingVicinity.hasWallAt(x: Int, y: Int): Int =
-        if (wallAt(x, y) == WallType.void) 0 else 1
+        if (
+        vicinity.tileBounds.contains(x, y)
+            && wallAt(x, y) != WallType.void
+        ) 1 else 0
 }
