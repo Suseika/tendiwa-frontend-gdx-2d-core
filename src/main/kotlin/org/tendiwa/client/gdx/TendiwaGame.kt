@@ -12,12 +12,14 @@ import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.client.gdx.temporaryImpls.CameraInputAdapter
 import org.tendiwa.client.gdx.walls.WallActorFactory
+import org.tendiwa.frontend.generic.PlayerVolition
 import org.tendiwa.frontend.generic.RenderingVicinity
 import org.tendiwa.plane.grid.dimensions.GridDimension
 
 class TendiwaGame(
     private val atlasPath: String,
-    private val reality: Reality
+    private val reality: Reality,
+    private val playerVolition: PlayerVolition
 ) : ApplicationAdapter() {
     lateinit var textureCache: NamedTextureCache
     lateinit var stage: Stage
