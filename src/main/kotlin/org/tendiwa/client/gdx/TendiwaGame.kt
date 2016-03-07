@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import org.tendiwa.backend.space.Reality
 import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
-import org.tendiwa.client.gdx.temporaryImpls.CameraInputAdapter
+import org.tendiwa.client.gdx.temporaryImpls.TendiwaInputAdapter
 import org.tendiwa.client.gdx.walls.WallActorFactory
 import org.tendiwa.frontend.generic.PlayerVolition
 import org.tendiwa.frontend.generic.RenderingVicinity
@@ -19,7 +19,8 @@ import org.tendiwa.plane.grid.dimensions.GridDimension
 class TendiwaGame(
     private val atlasPath: String,
     private val reality: Reality,
-    private val playerVolition: PlayerVolition
+    private val playerVolition: PlayerVolition,
+    private val plugins: List<TendiwaGdxClientPlugin>
 ) : ApplicationAdapter() {
     lateinit var textureCache: NamedTextureCache
     lateinit var stage: Stage
@@ -64,7 +65,11 @@ class TendiwaGame(
                         ?.let { addActor(it) }
                 }
             }
-        Gdx.input.inputProcessor = CameraInputAdapter(camera, vicinity)
+        val inputAdapter = TendiwaInputAdapter()
+        Gdx.input.inputProcessor = inputAdapter
+        plugins.forEach {
+            it.init(camera, vicinity, playerVolition, inputAdapter.keysSetup)
+        }
     }
 
     override fun render() {
