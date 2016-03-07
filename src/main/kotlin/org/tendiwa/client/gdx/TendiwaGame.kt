@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import org.tendiwa.backend.space.Reality
-import org.tendiwa.backend.space.walls.WallType
 import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
-import org.tendiwa.client.gdx.temporaryImpls.TendiwaInputAdapter
+import org.tendiwa.client.gdx.input.TendiwaInputAdapter
 import org.tendiwa.client.gdx.walls.WallActorFactory
 import org.tendiwa.frontend.generic.PlayerVolition
 import org.tendiwa.frontend.generic.RenderingVicinity
+import org.tendiwa.frontend.generic.hasWallAt
 import org.tendiwa.plane.grid.dimensions.GridDimension
 
 class TendiwaGame(
@@ -62,7 +62,7 @@ class TendiwaGame(
                     FloorLayer(textureCache, vicinity)
                 )
                 vicinity.tileBounds.forEachTile { x, y ->
-                    if (vicinity.wallAt(x, y) != WallType.void) {
+                    if (vicinity.hasWallAt(x, y)) {
                         wallActorFactory.createActor(x, y)
                             .let { addActor(it) }
                     }

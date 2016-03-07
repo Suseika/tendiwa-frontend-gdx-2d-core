@@ -1,7 +1,6 @@
-package org.tendiwa.client.gdx.temporaryImpls
+package org.tendiwa.client.gdx.input
 
 import com.badlogic.gdx.InputAdapter
-import org.tendiwa.client.gdx.input.KeysSetup
 
 class TendiwaInputAdapter() : InputAdapter() {
     internal val keysSetup = KeysSetup()
