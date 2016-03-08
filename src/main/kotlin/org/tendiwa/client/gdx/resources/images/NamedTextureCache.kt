@@ -19,5 +19,11 @@ class NamedTextureCache(
 
     private fun obtainRegions(name: String): Array<TextureAtlas.AtlasRegion> =
         typesToRegions
-            .getOrPut(name, { atlas.findRegions(name) })
+            .getOrPut(name, {
+                val regions = atlas.findRegions(name)
+                if (regions.size == 0) {
+                    throw IllegalArgumentException("No texture for \"$name\"")
+                }
+                regions
+            })
 }
