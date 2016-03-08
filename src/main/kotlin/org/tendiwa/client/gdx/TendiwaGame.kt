@@ -9,8 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import org.tendiwa.backend.space.Reality
 import org.tendiwa.client.gdx.floor.FloorLayer
-import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.client.gdx.input.TendiwaInputAdapter
+import org.tendiwa.client.gdx.realThings.RealThingActorFactory
+import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.client.gdx.walls.WallActorFactory
 import org.tendiwa.frontend.generic.PlayerVolition
 import org.tendiwa.frontend.generic.RenderingVicinity
@@ -49,6 +50,14 @@ class TendiwaGame(
                 ),
                 vicinity
             )
+        val realThingActorFactory =
+            RealThingActorFactory(
+                NamedTextureCache(
+                    TextureAtlas(
+                        Gdx.files.classpath("characters/characters.atlas")
+                    )
+                )
+            )
         stage = Stage(
             FitViewport(
                 Gdx.graphics.width.toFloat() / 32,
@@ -67,6 +76,10 @@ class TendiwaGame(
                             .let { addActor(it) }
                     }
                 }
+                vicinity.things.forEach {
+                    realThingActorFactory.createActor(it)
+                        .let { addActor(it) }
+                }
             }
         val inputAdapter = TendiwaInputAdapter()
         Gdx.input.inputProcessor = inputAdapter
@@ -80,3 +93,4 @@ class TendiwaGame(
         stage.draw()
     }
 }
+
