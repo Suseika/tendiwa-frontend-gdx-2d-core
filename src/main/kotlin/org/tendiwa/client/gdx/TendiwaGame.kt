@@ -6,22 +6,26 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction
 import com.badlogic.gdx.utils.viewport.FitViewport
 import org.tendiwa.backend.space.Reality
+import org.tendiwa.backend.space.aspects.Position
 import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.input.TendiwaInputAdapter
-import org.tendiwa.client.gdx.realThings.RealThingActorFactory
+import org.tendiwa.client.gdx.realThings.RealThingActorRegistry
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.client.gdx.walls.WallActorFactory
 import org.tendiwa.frontend.generic.PlayerVolition
 import org.tendiwa.frontend.generic.RenderingVicinity
 import org.tendiwa.frontend.generic.hasWallAt
 import org.tendiwa.plane.grid.dimensions.GridDimension
+import org.tendiwa.stimuli.StimulusMedium
 
 class TendiwaGame(
     private val atlasPath: String,
     private val reality: Reality,
     private val playerVolition: PlayerVolition,
+    private val stimulusMedium: StimulusMedium,
     private val plugins: List<TendiwaGdxClientPlugin>
 ) : ApplicationAdapter() {
     lateinit var textureCache: NamedTextureCache
@@ -50,14 +54,12 @@ class TendiwaGame(
                 ),
                 vicinity
             )
-        val realThingActorFactory =
-            RealThingActorFactory(
-                NamedTextureCache(
-                    TextureAtlas(
-                        Gdx.files.classpath("characters/characters.atlas")
-                    )
-                )
-            )
+        val realThingActorRegistry = RealThingActorRegistry()
+            .apply {
+                vicinity.things.forEach {
+                    addRealThing(it)
+                }
+            }
         stage = Stage(
             FitViewport(
                 Gdx.graphics.width.toFloat() / 32,
@@ -65,8 +67,10 @@ class TendiwaGame(
                 camera
             ),
             SpriteBatch()
+
         )
             .apply {
+                actionsRequestRendering = false
                 addActor(
                     FloorLayer(textureCache, vicinity)
                 )
@@ -76,11 +80,28 @@ class TendiwaGame(
                             .let { addActor(it) }
                     }
                 }
-                vicinity.things.forEach {
-                    realThingActorFactory.createActor(it)
-                        .let { addActor(it) }
-                }
+                realThingActorRegistry
+                    .actors()
+                    .forEach { addActor(it) }
             }
+        stimulusMedium.subscribeToAll {
+            if (it is Position.Change) {
+                val actor = realThingActorRegistry
+                    .actorOf(it.host)
+                actor
+                    .addAction(
+                        MoveToAction()
+                            .apply {
+                                this.setPosition(
+                                    it.to.x.toFloat(),
+                                    it.to.y.toFloat()
+                                )
+                                this.duration = 1.0f
+                            }
+                    )
+                println("${actor.x} ${actor.y}")
+            }
+        }
         val inputAdapter = TendiwaInputAdapter()
         Gdx.input.inputProcessor = inputAdapter
         plugins.forEach {
@@ -95,7 +116,8 @@ class TendiwaGame(
     }
 
     override fun render() {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        stage.act(Gdx.graphics.deltaTime)
         stage.draw()
     }
 }
