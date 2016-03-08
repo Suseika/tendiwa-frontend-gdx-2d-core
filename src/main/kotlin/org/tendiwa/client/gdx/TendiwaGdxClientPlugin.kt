@@ -9,6 +9,6 @@ interface TendiwaGdxClientPlugin {
         camera: TendiwaCamera,
         vicinity: RenderingVicinity,
         playerVolition: PlayerVolition,
-        KeysSetup: KeysSetup
+        keysSetup: KeysSetup
     )
 }
