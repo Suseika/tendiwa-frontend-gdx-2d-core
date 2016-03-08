@@ -96,10 +96,9 @@ class TendiwaGame(
                                     it.to.x.toFloat(),
                                     it.to.y.toFloat()
                                 )
-                                this.duration = 1.0f
+                                this.duration = 0.1f
                             }
                     )
-                println("${actor.x} ${actor.y}")
             }
         }
         val inputAdapter = TendiwaInputAdapter()
