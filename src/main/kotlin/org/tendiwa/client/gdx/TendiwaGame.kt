@@ -84,7 +84,13 @@ class TendiwaGame(
         val inputAdapter = TendiwaInputAdapter()
         Gdx.input.inputProcessor = inputAdapter
         plugins.forEach {
-            it.init(camera, vicinity, playerVolition, inputAdapter.keysSetup)
+            it.init(
+                camera,
+                vicinity,
+                playerVolition,
+                inputAdapter.keysSetup,
+                reality
+            )
         }
     }
 
