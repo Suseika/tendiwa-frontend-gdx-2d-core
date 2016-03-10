@@ -19,7 +19,7 @@ import org.tendiwa.frontend.generic.PlayerVolition
 import org.tendiwa.frontend.generic.RenderingVicinity
 import org.tendiwa.frontend.generic.hasWallAt
 import org.tendiwa.plane.grid.dimensions.GridDimension
-import org.tendiwa.stimuli.StimulusMedium
+import org.tendiwa.backend.existence.StimulusMedium
 
 class TendiwaGame(
     private val atlasPath: String,

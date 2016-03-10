@@ -5,7 +5,7 @@ import org.tendiwa.backend.space.aspects.name
 import org.tendiwa.backend.space.aspects.position
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.client.gdx.walls.WallActor
-import org.tendiwa.existence.RealThing
+import org.tendiwa.backend.existence.RealThing
 
 class RealThingActorFactory(
     private val cache: NamedTextureCache
