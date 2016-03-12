@@ -40,9 +40,9 @@ class TendiwaGame(
         initVicinity()
         initFacilities()
         initInput()
+        initReactions()
         initPlugins()
         initSurroundings()
-        initReactions()
     }
 
     lateinit var wallActorFactory: WallActorFactory
