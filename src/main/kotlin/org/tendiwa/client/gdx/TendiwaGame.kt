@@ -6,11 +6,9 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction
 import com.badlogic.gdx.utils.viewport.FitViewport
 import org.tendiwa.backend.existence.StimulusMedium
 import org.tendiwa.backend.space.Reality
-import org.tendiwa.backend.space.aspects.Position
 import org.tendiwa.backend.space.aspects.position
 import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.input.KeysSetup
@@ -36,6 +34,7 @@ class TendiwaGame(
     lateinit var camera: TendiwaCamera
     lateinit var keysSetup: KeysSetup
     lateinit var realThingActorRegistry: RealThingActorRegistry
+    lateinit var frontendStimulusMedium: FrontendStimulusMedium
 
     override fun create() {
         initVicinity()
@@ -76,23 +75,10 @@ class TendiwaGame(
     }
 
     private fun initReactions() {
-        stimulusMedium.subscribeToAll {
-            if (it is Position.Change) {
-                val actor = realThingActorRegistry
-                    .actorOf(it.host)
-                actor
-                    .addAction(
-                        MoveToAction()
-                            .apply {
-                                this.setPosition(
-                                    it.to.x.toFloat(),
-                                    it.to.y.toFloat()
-                                )
-                                this.duration = 0.1f
-                            }
-                    )
-            }
-        }
+        frontendStimulusMedium = FrontendStimulusMedium()
+        stimulusMedium.subscribeToAll(
+            { frontendStimulusMedium.handleStimulus(it) }
+        )
     }
 
     private fun initInput() {
