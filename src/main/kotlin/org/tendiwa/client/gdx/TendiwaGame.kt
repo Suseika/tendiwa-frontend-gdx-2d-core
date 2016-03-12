@@ -23,8 +23,8 @@ import org.tendiwa.plane.grid.dimensions.GridDimension
 
 class TendiwaGame(
     private val atlasPath: String,
-    private val reality: Reality,
-    private val playerVolition: PlayerVolition,
+    val reality: Reality,
+    val playerVolition: PlayerVolition,
     private val stimulusMedium: StimulusMedium,
     private val plugins: List<TendiwaGdxClientPlugin>
 ) : ApplicationAdapter() {
@@ -124,15 +124,7 @@ class TendiwaGame(
     }
 
     private fun initPlugins() {
-        plugins.forEach {
-            it.init(
-                camera,
-                vicinity,
-                playerVolition,
-                keysSetup,
-                reality
-            )
-        }
+        plugins.forEach { it.init(this) }
     }
 
     override fun render() {
