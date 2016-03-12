@@ -13,13 +13,15 @@ class FloorLayer(
     override fun draw(batch: Batch, parentAlpha: Float) {
         vicinity.tileBounds.forEachTile {
             x, y ->
-            batch.draw(
-                textureAt(x, y),
-                x.toFloat(),
-                y.toFloat(),
-                1f,
-                1f
-            )
+            if (vicinity.fieldOfView.contains(x, y)) {
+                batch.draw(
+                    textureAt(x, y),
+                    x.toFloat(),
+                    y.toFloat(),
+                    1f,
+                    1f
+                )
+            }
         }
     }
 
