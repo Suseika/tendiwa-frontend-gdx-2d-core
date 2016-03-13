@@ -13,13 +13,14 @@ import org.tendiwa.backend.space.aspects.position
 import org.tendiwa.client.gdx.floor.FloorLayer
 import org.tendiwa.client.gdx.input.KeysSetup
 import org.tendiwa.client.gdx.input.TendiwaInputAdapter
-import org.tendiwa.client.gdx.realThings.RealThingActorRegistry
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
-import org.tendiwa.client.gdx.walls.WallActorFactory
 import org.tendiwa.frontend.generic.PlayerVolition
 import org.tendiwa.frontend.generic.RenderingVicinity
 import org.tendiwa.frontend.generic.hasWallAt
+import org.tendiwa.math.integers.divCover
 import org.tendiwa.plane.grid.dimensions.GridDimension
+import org.tendiwa.plane.grid.masks.contains
+import org.tendiwa.plane.grid.tiles.Tile
 
 class TendiwaGame(
     private val atlasPath: String,
@@ -33,8 +34,8 @@ class TendiwaGame(
     lateinit var vicinity: RenderingVicinity
     lateinit var camera: TendiwaCamera
     lateinit var keysSetup: KeysSetup
-    lateinit var realThingActorRegistry: RealThingActorRegistry
     lateinit var frontendStimulusMedium: FrontendStimulusMedium
+    lateinit var gridActorRegistry: GridActorRegistry
 
     override fun create() {
         initVicinity()
@@ -45,12 +46,8 @@ class TendiwaGame(
         initSurroundings()
     }
 
-    lateinit var wallActorFactory: WallActorFactory
 
     private fun initSurroundings() {
-        vicinity.things.forEach {
-            realThingActorRegistry.addRealThing(it)
-        }
         stage.apply {
             actionsRequestRendering = false
             addActor(
@@ -60,15 +57,12 @@ class TendiwaGame(
                 if (
                 vicinity.hasWallAt(x, y) && vicinity.fieldOfView.contains(x, y)
                 ) {
-                    wallActorFactory.createActor(x, y)
-                        .let { addActor(it) }
+                    gridActorRegistry.spawnWall(Tile(x, y))
                 }
             }
             vicinity.things.forEach {
-                val position = it.position.voxel
-                if (vicinity.fieldOfView.contains(position.x, position.y)) {
-                    realThingActorRegistry.actorOf(it)
-                        .let { addActor(it) }
+                if (vicinity.fieldOfView.contains(it.position.tile)) {
+                    gridActorRegistry.spawnRealThing(it)
                 }
             }
         }
@@ -95,14 +89,6 @@ class TendiwaGame(
                 )
             )
         camera = TendiwaCamera()
-        wallActorFactory =
-            WallActorFactory(
-                NamedTextureCache(
-                    TextureAtlas(Gdx.files.classpath("walls/walls.atlas"))
-                ),
-                vicinity
-            )
-        realThingActorRegistry = RealThingActorRegistry()
         stage = Stage(
             FitViewport(
                 Gdx.graphics.width.toFloat() / 32,
@@ -111,14 +97,15 @@ class TendiwaGame(
             ),
             SpriteBatch()
         )
+        gridActorRegistry = GridActorRegistry(vicinity, stage)
     }
 
     private fun initVicinity() {
         vicinity = RenderingVicinity(
             reality.space,
             GridDimension(
-                Gdx.graphics.width / 32,
-                Gdx.graphics.height / 32
+                Gdx.graphics.width divCover 32,
+                Gdx.graphics.height divCover 32
             )
         )
     }

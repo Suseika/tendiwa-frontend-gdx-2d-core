@@ -11,6 +11,7 @@ import org.tendiwa.client.gdx.testing.LwjglGdxRule
 import org.tendiwa.frontend.generic.RenderingVicinity
 import org.tendiwa.plane.grid.constructors.GridRectangle
 import org.tendiwa.plane.grid.dimensions.by
+import org.tendiwa.plane.grid.tiles.Tile
 import kotlin.test.assertNotNull
 
 class WallActorFactoryTest {
@@ -22,14 +23,14 @@ class WallActorFactoryTest {
             createMockCache(),
             createMockVicinity()
         )
-            .createActor(1, 1)
+            .createActor(Tile(1, 1))
             .let { assertNotNull(it) }
     }
 
     @Test
     fun `doesnt create actor if there is no wall at given coordinate`() {
         WallActorFactory(createMockCache(), createMockVicinity())
-            .createActor(100, 100)
+            .createActor(Tile(100, 100))
     }
 
     private fun createMockVicinity(): RenderingVicinity =

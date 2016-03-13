@@ -4,14 +4,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import org.tendiwa.backend.space.walls.WallType
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.frontend.generic.RenderingVicinity
+import org.tendiwa.plane.grid.tiles.Tile
 
 class WallActorFactory(
     private val textureCache: NamedTextureCache,
     private val vicinity: RenderingVicinity
 ) {
-    fun createActor(x: Int, y: Int): WallActor =
-        regionForWall(x, y)
-            .let { WallActor(it, x, y) }
+    fun createActor(tile: Tile): WallActor =
+        regionForWall(tile.x, tile.y)
+            .let { WallActor(it, tile.x, tile.y) }
 
     private fun regionForWall(x: Int, y: Int): TextureRegion {
         val wallType = vicinity.wallAt(x, y)
