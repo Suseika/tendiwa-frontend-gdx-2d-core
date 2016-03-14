@@ -2,6 +2,7 @@ package org.tendiwa.client.gdx
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
+import org.tendiwa.plane.grid.tiles.Tile
 
 class TendiwaCamera : OrthographicCamera(
     Gdx.graphics.width.toFloat() / 32,
@@ -16,4 +17,12 @@ class TendiwaCamera : OrthographicCamera(
         zoom = 1.0f
         update()
     }
+}
+
+fun TendiwaCamera.centerOnTile(targetTile: Tile) {
+    position.set(
+        targetTile.x.toFloat() + 0.5f,
+        targetTile.y.toFloat() + 0.5f,
+        0f
+    )
 }
