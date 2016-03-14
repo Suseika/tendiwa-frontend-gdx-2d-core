@@ -52,10 +52,16 @@ class GridActorRegistry(
         tilesToActors.getOrPut(tile, { ArrayList() })
 
     fun spawnRealThing(thing: RealThing) {
-        val actor = realThingActorFactory.createActor(thing)
-        thingsToActors[thing] = actor
-        stage.addActor(actor)
-        rememberActorPosition(thing.position.tile, actor)
+        if (!thingsToActors.containsKey(thing)) {
+            val actor = realThingActorFactory.createActor(thing)
+            thingsToActors[thing] = actor
+            stage.addActor(actor)
+            rememberActorPosition(thing.position.tile, actor)
+        } else {
+            println(
+                "Trying to spawn an Actor for a RealThing that already has an actor"
+            )
+        }
     }
 
     fun actorOf(thing: RealThing): Actor =
