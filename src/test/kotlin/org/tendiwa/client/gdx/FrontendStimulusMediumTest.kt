@@ -12,11 +12,13 @@ class FrontendStimulusMediumTest {
         FrontendStimulusMedium().apply {
             registerReaction(
                 stimuliClass = PriceChange::class.java,
-                reaction = {
-                    lastPriceChange = it.delta
+                reaction = { stimulus, done ->
+                    lastPriceChange = stimulus.delta
+                    done()
                 }
             )
-            handleStimulus(PriceChange(expectedPrice))
+            queueStimulus(PriceChange(expectedPrice))
+            reactIfStimulated()
         }
         assertEquals(expectedPrice, lastPriceChange)
     }
@@ -24,7 +26,8 @@ class FrontendStimulusMediumTest {
     @Test
     fun `handles stimuli with 0 registered reactions`() {
         FrontendStimulusMedium().apply {
-            handleStimulus(PriceChange(1))
+            queueStimulus(PriceChange(1))
+            reactIfStimulated()
         }
     }
 
@@ -37,16 +40,20 @@ class FrontendStimulusMediumTest {
             registerReaction(
                 stimuliClass = PriceChange::class.java,
                 reaction = {
-                    lastPriceChange = it.delta
+                    stimulus, done ->
+                    lastPriceChange = stimulus.delta
+                    done()
                 }
             )
             registerReaction(
                 stimuliClass = PriceChange::class.java,
-                reaction = {
+                reaction = { stimulus, done ->
                     priceChanged = true
+                    done()
                 }
             )
-            handleStimulus(PriceChange(expectedPrice))
+            queueStimulus(PriceChange(expectedPrice))
+            reactIfStimulated()
         }
         assertEquals(expectedPrice, lastPriceChange)
         assert(priceChanged)

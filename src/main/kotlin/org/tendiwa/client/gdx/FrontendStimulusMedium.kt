@@ -10,29 +10,43 @@ import java.util.*
 class FrontendStimulusMedium {
     private val stimuliToReactions =
         LinkedHashMap<Class<out Stimulus>, MutableCollection<Reaction<in Stimulus>>>()
+    private val queue: Queue<Stimulus> = ArrayDeque<Stimulus>(10)
+    private var reactionInProgress = false
+    private val reactionIsDone = { reactionInProgress = false }
 
-    internal fun handleStimulus(stimulus: Stimulus) {
+    internal fun reactIfStimulated() {
+        if (!reactionInProgress && !queue.isEmpty()) {
+            reactionInProgress = true
+            handleStimulus(queue.poll())
+        }
+    }
+
+    internal fun queueStimulus(stimulus: Stimulus) {
+        queue.add(stimulus)
+    }
+
+    private fun handleStimulus(stimulus: Stimulus) {
         stimuliToReactions[stimulus.javaClass]
-            ?.forEach { it.react(stimulus) }
+            ?.forEach { it.react(stimulus, reactionIsDone) }
     }
 
     fun <S : Stimulus> registerReaction(
         stimuliClass: Class<S>,
-        reaction: (S) -> Unit
+        reaction: (stimulus: S, done: () -> Unit) -> Unit
     ) {
         stimuliToReactions
             .getOrPut(
                 stimuliClass,
                 { LinkedHashSet() }
             )
-            .add(
-                Reaction(reaction) as Reaction<Stimulus>
-            )
+            .add(Reaction(reaction) as Reaction<Stimulus>)
     }
 
-    private class Reaction<S : Stimulus>(val function: (S) -> Unit) {
-        fun react(stimulus: S) {
-            function(stimulus)
+    private class Reaction<S : Stimulus>(
+        val function: (stimulus: S, done: () -> Unit) -> Unit
+    ) {
+        fun react(stimulus: S, done: () -> Unit) {
+            function(stimulus, done)
         }
     }
 }

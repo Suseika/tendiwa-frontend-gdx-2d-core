@@ -71,7 +71,7 @@ class TendiwaGame(
     private fun initReactions() {
         frontendStimulusMedium = FrontendStimulusMedium()
         stimulusMedium.subscribeToAll(
-            { frontendStimulusMedium.handleStimulus(it) }
+            { frontendStimulusMedium.queueStimulus(it) }
         )
     }
 
@@ -116,6 +116,7 @@ class TendiwaGame(
 
     override fun render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        frontendStimulusMedium.reactIfStimulated()
         stage.act(Gdx.graphics.deltaTime)
         stage.draw()
     }
