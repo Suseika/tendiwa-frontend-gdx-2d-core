@@ -1,7 +1,5 @@
 package org.tendiwa.client.gdx
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import org.tendiwa.backend.existence.RealThing
@@ -15,6 +13,7 @@ import java.util.*
 
 class GridActorRegistry(
     vicinity: RenderingVicinity,
+    cache: NamedTextureCache,
     private val stage: Stage
 ) {
     private val tilesToActors =
@@ -27,21 +26,8 @@ class GridActorRegistry(
 
 
     init {
-        wallActorFactory =
-            WallActorFactory(
-                NamedTextureCache(
-                    TextureAtlas(Gdx.files.classpath("walls/walls.atlas"))
-                ),
-                vicinity
-            )
-        realThingActorFactory =
-            RealThingActorFactory(
-                NamedTextureCache(
-                    TextureAtlas(
-                        Gdx.files.classpath("characters/characters.atlas")
-                    )
-                )
-            )
+        wallActorFactory = WallActorFactory(cache, vicinity)
+        realThingActorFactory = RealThingActorFactory(cache)
     }
 
     internal fun rememberActorPosition(tile: Tile, actor: Actor) {

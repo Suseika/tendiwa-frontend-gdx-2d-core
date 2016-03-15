@@ -23,7 +23,7 @@ import org.tendiwa.plane.grid.masks.contains
 import org.tendiwa.plane.grid.tiles.Tile
 
 class TendiwaGame(
-    private val atlasPath: String,
+    private val obtainAtlas: () -> TextureAtlas,
     val reality: Reality,
     val playerVolition: PlayerVolition,
     private val stimulusMedium: StimulusMedium,
@@ -36,8 +36,10 @@ class TendiwaGame(
     lateinit var keysSetup: KeysSetup
     lateinit var frontendStimulusMedium: FrontendStimulusMedium
     lateinit var gridActorRegistry: GridActorRegistry
+    lateinit var atlas: TextureAtlas
 
     override fun create() {
+        atlas = obtainAtlas()
         initVicinity()
         initFacilities()
         initInput()
@@ -83,11 +85,7 @@ class TendiwaGame(
 
     private fun initFacilities() {
         textureCache =
-            NamedTextureCache(
-                TextureAtlas(
-                    Gdx.files.classpath(atlasPath)
-                )
-            )
+            NamedTextureCache(atlas)
         camera = TendiwaCamera()
         stage = Stage(
             FitViewport(
@@ -97,7 +95,7 @@ class TendiwaGame(
             ),
             SpriteBatch()
         )
-        gridActorRegistry = GridActorRegistry(vicinity, stage)
+        gridActorRegistry = GridActorRegistry(vicinity, textureCache, stage)
     }
 
     private fun initVicinity() {

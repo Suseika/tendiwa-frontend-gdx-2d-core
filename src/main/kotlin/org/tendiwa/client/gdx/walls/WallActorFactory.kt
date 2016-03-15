@@ -20,7 +20,7 @@ class WallActorFactory(
             throw IllegalArgumentException("No wall at $x:$y")
         } else {
             textureCache.texture(
-                wallType.name,
+                "walls/" + wallType.name,
                 wallVariantIndex(x, y)
             )
         }

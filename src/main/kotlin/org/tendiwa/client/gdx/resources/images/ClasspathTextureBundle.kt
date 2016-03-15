@@ -12,13 +12,18 @@ import java.util.regex.Pattern
 class ClasspathTextureBundle(
     private val classpathPackages: List<String>
 ) {
-    private val imageResourceNames: List<String> =
+    private val imageResourceNames: List<TextureResource> =
         classpathPackages
-            .flatMap {
-                Reflections(it, ResourcesScanner())
+            .flatMap { pkg ->
+                Reflections(pkg, ResourcesScanner())
                     .getResources(Pattern.compile(".*\\.png"))
+                    .map { TextureResource(it, pkg) }
             }
-            .sorted()
+            .sortedBy { it.resource }
+
+    private class TextureResource(val resource: String, pkg: String) {
+        val shortName: String = resource.substring(pkg.length + 1)
+    }
 
     val hash: String =
         MessageDigest
@@ -26,7 +31,7 @@ class ClasspathTextureBundle(
             .apply {
                 update(
                     imageResourceNames
-                        .joinToString { it }
+                        .joinToString { it.resource }
                         .toByteArray(Charsets.UTF_8)
                 )
             }
@@ -39,20 +44,14 @@ class ClasspathTextureBundle(
         imageResourceNames
             .forEach {
                 FileUtils.copyURLToFile(
-                    this.javaClass.getResource("/$it"),
-                    fileForResource(it, destination)
+                    this.javaClass.getResource("/${it.resource}"),
+                    fileForResource(it.shortName, destination)
                 )
             }
     }
 
-    private fun fileForResource(resource: String, destination: Path): File {
-        val file = File(
-            destination.toAbsolutePath().toString()
-                + "/"
-                + File(resource).toPath().toString()
-        )
-        return file
-    }
+    private fun fileForResource(resource: String, destination: Path): File =
+        File(destination.toAbsolutePath().toString() + "/$resource")
 }
 
 

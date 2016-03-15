@@ -27,7 +27,7 @@ class FloorLayer(
 
     private fun textureAt(x: Int, y: Int): TextureRegion =
         textureCache.texture(
-            name = vicinity.floorAt(x, y).name,
+            name = "floors/" + vicinity.floorAt(x, y).name,
             index = 0
         )
 }

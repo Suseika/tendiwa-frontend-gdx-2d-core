@@ -1,6 +1,7 @@
 package org.tendiwa.client.gdx.resources.images
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.tools.texturepacker.TexturePacker
 import java.io.PrintWriter
@@ -40,14 +41,20 @@ class TextureAtlasCache(
         }
     }
 
-    private fun packFile() =
-        Gdx.files.absolute(
+    private fun packFile(): FileHandle? {
+        if (Gdx.files == null) {
+            throw IllegalStateException(
+                "Libgdx has not been initialized yet"
+            )
+        }
+        return Gdx.files.absolute(
             directory
                 .resolve("atlas")
                 .resolve("universal.atlas")
                 .toAbsolutePath()
                 .toString()
         )
+    }
 
     private fun storedHash(hashFile: Path): String =
         String(
