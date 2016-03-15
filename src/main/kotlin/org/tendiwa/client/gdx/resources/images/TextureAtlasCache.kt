@@ -64,7 +64,7 @@ class TextureAtlasCache(
 
 
     fun regenerate() {
-        directory.toFile().mkdir()
+        directory.toFile().mkdirs()
         writeHash(textureBundle.hash)
         val extractDirectory = directory.resolve("extracted")
         textureBundle.extractTo(extractDirectory)
