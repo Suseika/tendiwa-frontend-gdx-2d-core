@@ -27,7 +27,6 @@ class ClasspathTextureBundleTest {
         )
             .extractTo(destination)
         destination
-            .resolve("floors")
             .toFile()
             .listFiles()
             .map { it.name }
