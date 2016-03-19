@@ -3,6 +3,7 @@ package org.tendiwa.client.gdx.walls
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.Actor
+import org.tendiwa.client.gdx.gridActors.drawInTileCoordinates
 
 /**
  * Walls are implemented as [Actor]s instead of a single layer similar to
@@ -21,12 +22,6 @@ class WallActor(
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
-        batch.draw(
-            region,
-            this.x,
-            this.y,
-            region.regionWidth.toFloat() / 32,
-            region.regionHeight.toFloat() / 32
-        )
+        batch.drawInTileCoordinates(region, x, y)
     }
 }
