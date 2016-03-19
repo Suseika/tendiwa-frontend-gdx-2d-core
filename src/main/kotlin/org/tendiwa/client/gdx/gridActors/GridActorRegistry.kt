@@ -98,3 +98,9 @@ class GridActorRegistry(
             }
     }
 }
+
+fun GridActorRegistry.addActorFactories(
+    vararg factories: ActorFactory
+) {
+    factories.forEach { addActorFactory(it) }
+}
