@@ -51,17 +51,22 @@ class WallActorFactory(
      * should have 16 variants.
      */
     private fun wallVariantIndex(x: Int, y: Int) =
-        vicinity.hasWallAt(x, y + 1) * 8 +
-            vicinity.hasWallAt(x + 1, y) * 4 +
-            vicinity.hasWallAt(x, y - 1) * 2 +
-            vicinity.hasWallAt(x - 1, y)
+        vicinity.neighborBit(x, y + 1).shl(3) +
+            vicinity.neighborBit(x + 1, y).shl(2) +
+            vicinity.neighborBit(x, y - 1).shl(1) +
+            vicinity.neighborBit(x - 1, y).shl(0)
 
     /**
      * Returns 1 if there is a wall, or 0 if there isn't.
      */
-    private fun RenderingVicinity.hasWallAt(x: Int, y: Int): Int =
-        if (
+    private fun RenderingVicinity.neighborBit(x: Int, y: Int):
+        Int =
+        when {
+            hasWall(x, y) -> 1
+            else -> 0
+        }
+
+    private fun RenderingVicinity.hasWall(x: Int, y: Int) =
         vicinity.tileBounds.contains(x, y)
             && wallAt(x, y) != WallType.void
-        ) 1 else 0
 }
