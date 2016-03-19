@@ -11,6 +11,7 @@ import org.tendiwa.backend.existence.StimulusMedium
 import org.tendiwa.backend.space.Reality
 import org.tendiwa.backend.space.aspects.position
 import org.tendiwa.client.gdx.floor.FloorLayer
+import org.tendiwa.client.gdx.gridActors.GridActorRegistry
 import org.tendiwa.client.gdx.input.KeysSetup
 import org.tendiwa.client.gdx.input.TendiwaInputAdapter
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache

@@ -1,16 +1,20 @@
-package org.tendiwa.client.gdx
+package org.tendiwa.client.gdx.gridActors
 
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import org.tendiwa.backend.existence.RealThing
 import org.tendiwa.backend.space.aspects.position
-import org.tendiwa.client.gdx.realThings.RealThingActorFactory
 import org.tendiwa.client.gdx.resources.images.NamedTextureCache
 import org.tendiwa.client.gdx.walls.WallActorFactory
 import org.tendiwa.frontend.generic.RenderingVicinity
 import org.tendiwa.plane.grid.tiles.Tile
 import java.util.*
 
+/**
+ * Spawns and stores [Actors][Actor] that have a position in space.
+ * Different kinds of actors are spawned by different
+ * [ActorSpawners][ActorFactory].
+ */
 class GridActorRegistry(
     vicinity: RenderingVicinity,
     cache: NamedTextureCache,
@@ -18,16 +22,18 @@ class GridActorRegistry(
 ) {
     private val tilesToActors =
         LinkedHashMap<Tile, MutableList<Actor>>(50)
-    private val realThingActorFactory: RealThingActorFactory
     private val thingsToActors: MutableMap<RealThing, Actor> =
         LinkedHashMap()
+    private val spawners = ArrayList<ActorFactory>()
 
     private var wallActorFactory: WallActorFactory
 
-
     init {
         wallActorFactory = WallActorFactory(cache, vicinity)
-        realThingActorFactory = RealThingActorFactory(cache)
+    }
+
+    fun addActorFactory(factory: ActorFactory) {
+        spawners.add(factory)
     }
 
     internal fun rememberActorPosition(tile: Tile, actor: Actor) {
@@ -38,17 +44,23 @@ class GridActorRegistry(
         tilesToActors.getOrPut(tile, { ArrayList() })
 
     fun spawnRealThing(thing: RealThing) {
-        if (!thingsToActors.containsKey(thing)) {
-            val actor = realThingActorFactory.createActor(thing)
-            thingsToActors[thing] = actor
-            stage.addActor(actor)
-            rememberActorPosition(thing.position.tile, actor)
-        } else {
+        if (thingsToActors.containsKey(thing)) {
             println(
                 "Trying to spawn an Actor for a RealThing that already has an actor"
             )
+            return
         }
+        val actor = createActor(thing)
+        thingsToActors[thing] = actor
+        stage.addActor(actor)
+        rememberActorPosition(thing.position.tile, actor)
     }
+
+    private fun createActor(thing: RealThing): Actor =
+        spawners
+            .find { it.creates(thing) }
+            ?.create(thing)
+            ?: throw RuntimeException("No spawner for $thing")
 
     fun actorOf(thing: RealThing): Actor =
         thingsToActors[thing]!!
