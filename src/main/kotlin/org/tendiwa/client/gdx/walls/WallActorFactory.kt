@@ -10,9 +10,21 @@ class WallActorFactory(
     private val textureCache: NamedTextureCache,
     private val vicinity: RenderingVicinity
 ) {
-    fun createActor(tile: Tile): WallActor =
+    fun createActor(tile: Tile): RegionActor =
         regionForWall(tile.x, tile.y)
-            .let { WallActor(it, tile.x, tile.y) }
+            .let {
+                /*
+                 * Walls are implemented as [Actor]s instead of a single layer
+                 * similar to [FloorLayer] because otherwise it would be very
+                 * difficult to occlude things behind wall pieces and at the
+                 * same time occlude wall pieces with things in front of the
+                 * wall pieces.
+                 */
+                RegionActor(it)
+                    .apply {
+                        setPosition(tile.x.toFloat(), tile.y.toFloat())
+                    }
+            }
 
     private fun regionForWall(x: Int, y: Int): TextureRegion {
         val wallType = vicinity.wallAt(x, y)

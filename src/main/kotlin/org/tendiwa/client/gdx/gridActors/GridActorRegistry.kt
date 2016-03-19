@@ -60,6 +60,10 @@ class GridActorRegistry(
         spawners
             .find { it.creates(thing) }
             ?.create(thing)
+            ?.apply {
+                val tile = thing.position.tile
+                setPosition(tile.x.toFloat(), tile.y.toFloat())
+            }
             ?: throw RuntimeException("No spawner for $thing")
 
     fun actorOf(thing: RealThing): Actor =
