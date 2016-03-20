@@ -34,6 +34,7 @@ class LwjglGdxRule() : ExternalResource() {
                         resizable = false
                         width = 800
                         height = 600
+                        LwjglApplicationConfiguration.disableAudio = true
                     }
                 )
                 lock.notify()
