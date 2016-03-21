@@ -71,11 +71,14 @@ class GridActorRegistry(
 
     fun removeActor(tile: Tile, thing: RealThing) {
         val actors = tilesToActors[tile]!!
+        val actor = thingsToActors[thing]!!
+        actor.remove()
         if (actors.size == 1) {
             tilesToActors.remove(tile)
         } else {
             actors.remove(thingsToActors[thing])
         }
+        thingsToActors.remove(thing)
     }
 
     fun removeWallActor(tile: Tile) {
