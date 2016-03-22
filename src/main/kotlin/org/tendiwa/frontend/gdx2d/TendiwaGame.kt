@@ -38,6 +38,7 @@ class TendiwaGame(
     lateinit var frontendStimulusMedium: FrontendStimulusMedium
     lateinit var gridActorRegistry: GridActorRegistry
     lateinit var atlas: TextureAtlas
+    lateinit var uiStage: Stage
 
     override fun create() {
         atlas = obtainAtlas()
@@ -45,6 +46,7 @@ class TendiwaGame(
         initFacilities()
         initInput()
         initReactions()
+        initUi()
         initPlugins()
         initSurroundings()
     }
@@ -113,11 +115,21 @@ class TendiwaGame(
         plugins.forEach { it.init(this) }
     }
 
+    private fun initUi() {
+        uiStage = Stage()
+    }
+
     override fun render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         frontendStimulusMedium.reactIfStimulated()
         stage.act(Gdx.graphics.deltaTime)
         stage.draw()
+        uiStage.act(Gdx.graphics.deltaTime)
+        uiStage.draw()
+    }
+
+    override fun dispose() {
+        stage.dispose()
     }
 }
 
