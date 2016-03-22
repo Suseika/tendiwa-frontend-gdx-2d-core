@@ -16,7 +16,6 @@ class FrontendStimulusMedium {
 
     internal fun reactIfStimulated() {
         if (!reactionInProgress && !queue.isEmpty()) {
-            reactionInProgress = true
             handleStimulus(queue.poll())
         }
     }
@@ -27,7 +26,10 @@ class FrontendStimulusMedium {
 
     private fun handleStimulus(stimulus: Stimulus) {
         stimuliToReactions[stimulus.javaClass]
-            ?.forEach { it.react(stimulus, reactionIsDone) }
+            ?.let {
+                reactionInProgress = true
+                it.forEach { it.react(stimulus, reactionIsDone) }
+            }
     }
 
     fun <S : Stimulus> registerReaction(
