@@ -3,7 +3,8 @@ package org.tendiwa.frontend.gdx2d.gridActors
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import org.tendiwa.backend.existence.RealThing
-import org.tendiwa.backend.space.aspects.position
+import org.tendiwa.backend.existence.aspect
+import org.tendiwa.backend.space.aspects.Position
 import org.tendiwa.frontend.gdx2d.resources.images.NamedTextureCache
 import org.tendiwa.frontend.gdx2d.walls.WallActorFactory
 import org.tendiwa.frontend.generic.RenderingVicinity
@@ -53,7 +54,7 @@ class GridActorRegistry(
         val actor = createActor(thing)
         thingsToActors[thing] = actor
         stage.addActor(actor)
-        rememberActorPosition(thing.position.tile, actor)
+        rememberActorPosition(thing.aspect<Position>().tile, actor)
     }
 
     private fun createActor(thing: RealThing): Actor =
@@ -61,7 +62,7 @@ class GridActorRegistry(
             .find { it.creates(thing) }
             ?.create(thing)
             ?.apply {
-                val tile = thing.position.tile
+                val tile = thing.aspect<Position>().tile
                 setPosition(tile.x.toFloat(), tile.y.toFloat())
             }
             ?: throw RuntimeException("No spawner for $thing")

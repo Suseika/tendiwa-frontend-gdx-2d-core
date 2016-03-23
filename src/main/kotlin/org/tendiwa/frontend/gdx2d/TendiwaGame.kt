@@ -8,8 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import org.tendiwa.backend.existence.StimulusMedium
+import org.tendiwa.backend.existence.aspect
 import org.tendiwa.backend.space.Reality
-import org.tendiwa.backend.space.aspects.position
+import org.tendiwa.backend.space.aspects.Position
 import org.tendiwa.frontend.gdx2d.floor.FloorLayer
 import org.tendiwa.frontend.gdx2d.gridActors.GridActorRegistry
 import org.tendiwa.frontend.gdx2d.input.KeysSetup
@@ -66,7 +67,7 @@ class TendiwaGame(
                 }
             }
             vicinity.things.forEach {
-                if (vicinity.fieldOfView.contains(it.position.tile)) {
+                if (vicinity.fieldOfView.contains(it.aspect<Position>().tile)) {
                     gridActorRegistry.spawnRealThing(it)
                 }
             }
