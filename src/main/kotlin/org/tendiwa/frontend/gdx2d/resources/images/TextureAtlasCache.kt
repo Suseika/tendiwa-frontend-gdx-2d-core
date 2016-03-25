@@ -66,7 +66,8 @@ class TextureAtlasCache(
     fun regenerate() {
         directory.toFile().mkdirs()
         writeHash(textureBundle.hash)
-        val extractDirectory = directory.resolve("extracted")
+        val extractDirectory =
+            directory.resolve(extractDirectoryName())
         textureBundle.extractTo(extractDirectory)
         TexturePacker.process(
             extractDirectory.toString(),
@@ -76,6 +77,8 @@ class TextureAtlasCache(
         extractDirectory.toFile().deleteRecursively()
     }
 
+    private fun extractDirectoryName() =
+        "${System.currentTimeMillis().hashCode().toString()}_extracted"
 
     private fun writeHash(hash: String) {
         PrintWriter(directory.resolve(HASH_FILE_NAME).toFile())
