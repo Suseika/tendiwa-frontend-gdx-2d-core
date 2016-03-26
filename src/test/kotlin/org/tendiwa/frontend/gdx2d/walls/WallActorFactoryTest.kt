@@ -5,11 +5,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import org.junit.Rule
 import org.junit.Test
+import org.tendiwa.backend.GridParallelepiped
+import org.tendiwa.backend.by
 import org.tendiwa.backend.space.Space
+import org.tendiwa.backend.space.Voxel
 import org.tendiwa.frontend.gdx2d.resources.images.NamedTextureCache
 import org.tendiwa.frontend.gdx2d.testing.LwjglGdxRule
 import org.tendiwa.frontend.generic.RenderingVicinity
-import org.tendiwa.plane.grid.constructors.GridRectangle
 import org.tendiwa.plane.grid.dimensions.by
 import org.tendiwa.plane.grid.tiles.Tile
 import kotlin.test.assertNotNull
@@ -35,18 +37,17 @@ class WallActorFactoryTest {
 
     private fun createMockVicinity(): RenderingVicinity =
         RenderingVicinity(
-            Space(GridRectangle(32 by 32), 1),
+            Space(GridParallelepiped(Voxel(0, 0, 0), 32 by 32 by 1)),
             32 by 32,
             0
         )
 
 
-    private fun createMockCache(): NamedTextureCache {
-        return NamedTextureCache(
+    private fun createMockCache(): NamedTextureCache =
+        NamedTextureCache(
             TextureAtlas().apply {
                 addRegion("dude", TextureRegion(Texture("floors/stone_0.png")))
             }
         )
-    }
 
 }
