@@ -61,7 +61,8 @@ class TendiwaGame(
             )
             vicinity.tileBounds.forEachTile { x, y ->
                 if (
-                vicinity.hasWallAt(x, y) && vicinity.fieldOfView.contains(x, y)
+                vicinity.hasWallAt(x, y)
+                    && vicinity.fieldOfView.contains(x, y)
                 ) {
                     gridActorRegistry.spawnWall(Tile(x, y))
                 }
@@ -108,7 +109,8 @@ class TendiwaGame(
             GridDimension(
                 Gdx.graphics.width divCover 32,
                 Gdx.graphics.height divCover 32
-            )
+            ),
+            0
         )
     }
 

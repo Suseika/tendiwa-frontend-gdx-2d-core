@@ -35,8 +35,9 @@ class WallActorFactoryTest {
 
     private fun createMockVicinity(): RenderingVicinity =
         RenderingVicinity(
-            Space(GridRectangle(32 by 32), listOf()),
-            32 by 32
+            Space(GridRectangle(32 by 32), 1),
+            32 by 32,
+            0
         )
 
 
