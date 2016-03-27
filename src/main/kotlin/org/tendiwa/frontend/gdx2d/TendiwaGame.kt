@@ -13,8 +13,8 @@ import org.tendiwa.backend.space.Reality
 import org.tendiwa.backend.space.aspects.Position
 import org.tendiwa.frontend.gdx2d.floor.FloorLayer
 import org.tendiwa.frontend.gdx2d.gridActors.GridActorRegistry
-import org.tendiwa.frontend.gdx2d.input.KeysSetup
-import org.tendiwa.frontend.gdx2d.input.TendiwaInputAdapter
+import org.tendiwa.frontend.gdx2d.input.KeyCombinationPool
+import org.tendiwa.frontend.gdx2d.input.TendiwaInputProcessor
 import org.tendiwa.frontend.gdx2d.resources.images.NamedTextureCache
 import org.tendiwa.frontend.generic.PlayerVolition
 import org.tendiwa.frontend.generic.RenderingVicinity
@@ -35,19 +35,20 @@ class TendiwaGame(
     lateinit var stage: Stage
     lateinit var vicinity: RenderingVicinity
     lateinit var camera: TendiwaCamera
-    lateinit var keysSetup: KeysSetup
+    lateinit var keyCombinationPool: KeyCombinationPool
     lateinit var frontendStimulusMedium: FrontendStimulusMedium
     lateinit var gridActorRegistry: GridActorRegistry
     lateinit var atlas: TextureAtlas
     lateinit var uiStage: Stage
+    lateinit var inputProcessor: TendiwaInputProcessor
 
     override fun create() {
         atlas = obtainAtlas()
         initVicinity()
         initFacilities()
+        initUi()
         initInput()
         initReactions()
-        initUi()
         initPlugins()
         initSurroundings()
     }
@@ -83,9 +84,13 @@ class TendiwaGame(
     }
 
     private fun initInput() {
-        val inputAdapter = TendiwaInputAdapter()
-        Gdx.input.inputProcessor = inputAdapter
-        keysSetup = inputAdapter.keysSetup
+        keyCombinationPool = KeyCombinationPool()
+        inputProcessor = TendiwaInputProcessor(
+            uiStage,
+            keyCombinationPool,
+            Gdx.input
+        )
+        Gdx.input.inputProcessor = inputProcessor
     }
 
     private fun initFacilities() {

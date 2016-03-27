@@ -1,5 +1,6 @@
 package org.tendiwa.frontend.gdx2d.input
 
+import com.badlogic.gdx.Input
 import java.util.*
 
 
@@ -12,7 +13,7 @@ class KeyCombinationPool {
 
     private var combinations: MutableMap<Int, KeyCombination> = HashMap()
 
-    fun obtainCombination(
+    fun combination(
         keycode: Int,
         ctrl: Boolean = false,
         alt: Boolean = false,
@@ -38,13 +39,19 @@ class KeyCombinationPool {
             .plus(if (ctrl) Modifiers.ctrl else 0)
             .plus(if (alt) Modifiers.alt else 0)
             .plus(if (shift) Modifiers.shift else 0)
-
-    private fun obtainCombination(combination: Int): KeyCombination =
-        obtainCombination(
-            combination % Modifiers.ctrl,
-            (combination and Modifiers.ctrl) == Modifiers.ctrl,
-            (combination and Modifiers.alt) == Modifiers.alt,
-            (combination and Modifiers.shift) == Modifiers.shift
-        )
 }
+
+/**
+ * Returns the [KeyCombination] received in the current frame.
+ */
+fun KeyCombinationPool.currentCombination(
+    keycode: Int,
+    gdxInput: Input
+): KeyCombination =
+    combination(
+        keycode = keycode,
+        ctrl = gdxInput.isCtrlPressed(),
+        alt = gdxInput.isAltPressed(),
+        shift = gdxInput.isShiftPressed()
+    )
 
