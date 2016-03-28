@@ -22,10 +22,7 @@ class UiMode(
     val mouseActions: Map<Int, TileAction>
         get() = _mouseActions
 
-    private var _mouseMoveAction: TileAction? = null
-
-    val mouseMoveAction: TileAction?
-        get() = _mouseMoveAction
+    var mouseMoveAction: TileAction? = null
 
     /**
      * Maps a key combination to an action so action will be executed when that key combination is pressed.
