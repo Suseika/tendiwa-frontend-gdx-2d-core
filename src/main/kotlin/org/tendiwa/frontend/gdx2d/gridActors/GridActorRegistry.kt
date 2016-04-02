@@ -54,7 +54,6 @@ class GridActorRegistry(
         val actor = createActor(thing)
         thingsToActors[thing] = actor
         stage.addActor(actor)
-        rememberActorPosition(thing.aspect<Position>().tile, actor)
     }
 
     private fun createActor(thing: RealThing): Actor =
@@ -67,18 +66,12 @@ class GridActorRegistry(
             }
             ?: throw RuntimeException("No spawner for $thing")
 
-    fun actorOf(thing: RealThing): Actor =
-        thingsToActors[thing]!!
+    fun actorOf(thing: RealThing): Actor? =
+        thingsToActors[thing]
 
-    fun removeActor(tile: Tile, thing: RealThing) {
-        val actors = tilesToActors[tile]!!
+    fun removeActor(thing: RealThing) {
         val actor = thingsToActors[thing]!!
         actor.remove()
-        if (actors.size == 1) {
-            tilesToActors.remove(tile)
-        } else {
-            actors.remove(thingsToActors[thing])
-        }
         thingsToActors.remove(thing)
     }
 
