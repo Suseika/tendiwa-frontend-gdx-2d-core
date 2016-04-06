@@ -9,6 +9,8 @@ import org.tendiwa.backend.GridParallelepiped
 import org.tendiwa.backend.by
 import org.tendiwa.backend.space.Space
 import org.tendiwa.backend.space.Voxel
+import org.tendiwa.backend.space.lighting.ConstantLuminary
+import org.tendiwa.backend.space.lighting.Luminosity
 import org.tendiwa.frontend.gdx2d.resources.images.NamedTextureCache
 import org.tendiwa.frontend.gdx2d.testing.LwjglGdxRule
 import org.tendiwa.frontend.generic.RenderingVicinity
@@ -37,7 +39,11 @@ class WallActorFactoryTest {
 
     private fun createMockVicinity(): RenderingVicinity =
         RenderingVicinity(
-            Space(GridParallelepiped(Voxel(0, 0, 0), 32 by 32 by 1)),
+            Space(
+                GridParallelepiped(Voxel(0, 0, 0), 32 by 32 by 1),
+                listOf(true),
+                ConstantLuminary(Luminosity.SUNNY)
+            ),
             32 by 32,
             0
         )
